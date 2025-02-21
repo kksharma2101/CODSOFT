@@ -6,7 +6,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-      maxLength: 8,
     },
     email: {
       type: String,
@@ -25,6 +24,6 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-const user = model("User", userSchema);
+const User = model("CodSoft_User", userSchema);
 
-export default user;
+export default User;

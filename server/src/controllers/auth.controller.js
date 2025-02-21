@@ -2,12 +2,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
-async function token(id) {
-  return jwt.sign(id, process.env.JWT_SECRET || "1K3Jhdsjuw90", {
-    expiresIn: "2d",
-  });
-}
-
 export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -21,14 +15,21 @@ export const register = async (req, res) => {
     }
 
     const hashPassword = bcrypt.hashSync(password, 10);
-    const user = await User.create({ name, email, hashPassword, role });
+
+    const user = new User({ name, email, password: hashPassword, role });
 
     if (!user) {
       res.send("User is not register, try again");
     }
-    user.save();
+    await user.save();
 
-    const userToken = token(user._id);
+    const userToken = jwt.sign(
+      {
+        data: user._id,
+      },
+      "secret",
+      { expiresIn: 60 * 60 }
+    );
 
     res.status(200).json({
       success: true,
@@ -57,15 +58,21 @@ export const login = async (req, res, next) => {
     }
 
     // compare password
-    const match = await passwordCompare(password, user.password);
+    const match = await bcrypt.compare(password, user.password);
     if (!match) {
       return next(new AppError("Password does not match", 404));
     }
 
-    user.password = undefined;
+    // user.password = undefined;
 
     // res.cookie("token", token, cookieOptions);
-    const userToken = token(user._id);
+    const userToken = jwt.sign(
+      {
+        data: user._id,
+      },
+      "secret",
+      { expiresIn: 60 * 60 }
+    );
 
     res.status(200).json({
       success: true,
@@ -79,6 +86,10 @@ export const login = async (req, res, next) => {
       userToken,
     });
   } catch (e) {
-    return next(new AppError(e.message, 404));
+    return res.status(500).json({
+      success: false,
+      message: "User is not login",
+      error: e,
+    });
   }
 };
