@@ -2,8 +2,8 @@ import express from "express";
 import { userVerify } from "../middleware/userAuth.middleware.js";
 import {
   createProduct,
+  getAllProduct,
   // deleteProduct,
-  // getAllProduct,
   // getProductPhoto,
   // getSingleProduct,
   // paymentBraintree,
@@ -17,7 +17,6 @@ import {
   // updateProduct,
 } from "../controllers/product.controller.js";
 import multer from "multer";
-// import formidable from "express-formidable";
 
 const productRouter = express.Router();
 
@@ -29,23 +28,14 @@ productRouter.post(
   "/create-product",
   userVerify,
   upload.single("photo"),
-  // isAdmin,
-  // formidable(),
   createProduct
 );
 
-// update product
-productRouter.put(
-  "/update-product/:pid",
-  userVerify
-  // formidable(),
-  // updateProduct
-);
 
 // get all product
 productRouter.get(
-  "/get-product"
-  // getAllProduct
+  "/get-product",
+  getAllProduct
 );
 
 //get single product

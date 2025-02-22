@@ -38,6 +38,7 @@ export const createProduct = async (req, res) => {
     });
    
     await product.save();
+
     res.status(200).json({
       success: true,
       message: "Product created successfully",
@@ -108,10 +109,11 @@ export const getAllProduct = async (req, res) => {
   try {
     const product = await productModel
       .find({})
-      .populate("category")
+      // .populate("category")
       .select("-photo")
       .limit(10)
-      .sort({ createdAt: -1 });
+      // .sort({ createdAt: -1 });
+
     if (!product) {
       return res.status(400).send({
         message: "Product is not get try again",
@@ -212,7 +214,7 @@ export const productFilter = async (req, res) => {
     console.log(error);
     res.status(400).send({
       success: false,
-      message: "Error WHile Filtering Products",
+      message: "Error While Filtering Products",
       error,
     });
   }
