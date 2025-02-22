@@ -8,7 +8,7 @@ const productSchema = new Schema(
     },
     slug: {
       type: String,
-      required: true,
+      // required: true,
     },
     description: {
       type: String,
@@ -28,7 +28,8 @@ const productSchema = new Schema(
     //   required: true,
     // },
     photo: {
-      data: Buffer,
+      // data: Buffer,
+      type: String,
       contentType: String,
     },
     // shipping: {

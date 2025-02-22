@@ -1,7 +1,8 @@
+// import multer from "multer";
 import productModel from "../models/productModel.js";
 // import categoryModel from "../models/categoryModels.js";
-import fs from "fs";
-import slugify from "slugify";
+// import fs from "fs";
+// import slugify from "slugify";
 // import braintree from "braintree";
 // import orderModel from "../models/orderModel.js";
 
@@ -16,10 +17,10 @@ import slugify from "slugify";
 // create product
 export const createProduct = async (req, res) => {
   try {
-    const { name, price, description, category, quantity, shipping } =
-      req.fields;
-    const { photo } = req.files;
-    if (!(name, price, description, category, quantity)) {
+    const { name, price, description } = req.body;
+    const photo = req.file ? req.file.buffer.toString("base64") : null;
+
+    if (!(name, price, description)) {
       return res.status(400).json({
         message: "All field is required",
       });
@@ -29,11 +30,13 @@ export const createProduct = async (req, res) => {
         message: "Photo is required and should be less then 1mb",
       });
     }
-    const product = new productModel({ ...req.fields, slug: slugify(name) });
-    if (photo) {
-      product.photo.data = fs.readFileSync(photo.path);
-      product.photo.contentType = photo.type;
-    }
+    const product = new productModel({
+      name,
+      price,
+      description,
+      photo: photo,
+    });
+   
     await product.save();
     res.status(200).json({
       success: true,

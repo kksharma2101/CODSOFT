@@ -27,7 +27,7 @@ export const register = async (req, res) => {
       {
         data: user._id,
       },
-      "secret",
+      process.env.JWT_SECRET,
       { expiresIn: 60 * 60 }
     );
 
@@ -70,19 +70,13 @@ export const login = async (req, res, next) => {
       {
         data: user._id,
       },
-      "secret",
+      process.env.JWT_SECRET,
       { expiresIn: 60 * 60 }
     );
 
     res.status(200).json({
       success: true,
       message: "User logged successfully",
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
       userToken,
     });
   } catch (e) {
