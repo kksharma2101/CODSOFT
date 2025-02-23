@@ -16,7 +16,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    isAdmin: { type: Boolean, default: false },
+    role: { type: String, required: true },
   },
   { timestamps: true }
 );
