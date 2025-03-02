@@ -18,7 +18,7 @@ export default function AuthForm({ type, onSubmit }) {
   };
 
   return (
-    <div className="w-full flex justify-center items-center">
+    <div className="w-full flex justify-center items-center mt-5">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-lg shadow-lg w-96"
