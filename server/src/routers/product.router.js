@@ -3,6 +3,7 @@ import { userVerify } from "../middleware/userAuth.middleware.js";
 import {
   createProduct,
   getAllProduct,
+  getProductImage,
   // deleteProduct,
   // getProductPhoto,
   // getSingleProduct,
@@ -17,6 +18,7 @@ import {
   // updateProduct,
 } from "../controllers/product.controller.js";
 import multer from "multer";
+import formidable from "express-formidable";
 
 const productRouter = express.Router();
 
@@ -27,16 +29,16 @@ const upload = multer({ storage });
 productRouter.post(
   "/create-product",
   userVerify,
-  upload.single("photo"),
+  formidable(),
+  // upload.single("photo"),
   createProduct
 );
 
-
 // get all product
-productRouter.get(
-  "/get-product",
-  getAllProduct
-);
+productRouter.get("/get-product", getAllProduct);
+
+// get Image
+productRouter.get("/image/:id", getProductImage);
 
 //get single product
 // productRouter.get("/single-product/:slug", getSingleProduct);

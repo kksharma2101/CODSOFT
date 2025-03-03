@@ -4,23 +4,26 @@ import productModel from "../models/productModel.js";
 export const createProduct = async (req, res) => {
   try {
     const { name, price, description } = req.body;
-    const photo = req.file ? req.file.buffer.toString("base64") : null;
+    const image = req.file
+    // ? req.file.buffer.toString("base64") : null;
 
     if (!(name, price, description)) {
       return res.status(400).json({
         message: "All field is required",
       });
     }
-    if (!photo && photo.size > 100000) {
+    if (!image && image.size > 100000) {
       return res.status(400).send({
-        message: "Photo is required and should be less then 1mb",
+        message: "image is required and should be less then 1mb",
       });
     }
     const product = new productModel({
       name,
       price,
       description,
-      photo: photo,
+      image: image.buffer
+      // req.file.buffer, // Store image as Buffer
+      // imageType: req.file.mimetype, // Store image MIME type
     });
 
     await product.save();
@@ -46,7 +49,7 @@ export const createProduct = async (req, res) => {
 //     const { name, description, price, category, quantity, shipping } =
 //       req.fields;
 
-//     const { photo } = req.files;
+//     const { image } = req.files;
 //     //validation
 //     switch (true) {
 //       case !name:
@@ -59,10 +62,10 @@ export const createProduct = async (req, res) => {
 //         return res.status(500).send({ error: "Category is Required" });
 //       case !quantity:
 //         return res.status(500).send({ error: "Quantity is Required" });
-//       case photo && photo.size > 1000000:
+//       case image && image.size > 1000000:
 //         return res
 //           .status(500)
-//           .send({ error: "photo is Required and should be less then 1mb" });
+//           .send({ error: "image is Required and should be less then 1mb" });
 //     }
 
 //     const product = await productModel.findByIdAndUpdate(
@@ -70,9 +73,9 @@ export const createProduct = async (req, res) => {
 //       { ...req.fields, slug: slugify(name) },
 //       { new: true }
 //     );
-//     if (photo) {
-//       product.photo.data = fs.readFileSync(photo.path);
-//       product.photo.contentType = photo.type;
+//     if (image) {
+//       product.image.data = fs.readFileSync(image.path);
+//       product.image.contentType = image.type;
 //     }
 //     await product.save();
 //     res.status(201).send({
@@ -96,7 +99,7 @@ export const getAllProduct = async (req, res) => {
     const product = await productModel
       .find({})
       // .populate("category")
-      // .select("-photo")
+      // .select("-image")
       .limit(10);
     // .sort({ createdAt: -1 });
 
@@ -122,13 +125,27 @@ export const getAllProduct = async (req, res) => {
   }
 };
 
+// get image
+export const getProductImage = async (req, res) => {
+  try {
+    const post = await productModel.findById(req.params.id);
+    if (!post || !post.image) {
+      return res.status(404).json({ error: "Image not found" });
+    }
+    // res.set("Content-Type", post.imageType);
+    res.send(post.image);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching image" });
+  }
+};
+
 // get single product
 // export const getSingleProduct = async (req, res) => {
 //   try {
 //     const product = await productModel
 //       .findOne({ slug: req.params.slug })
 //       .populate("category")
-//       .select("-photo");
+//       .select("-image");
 
 //     res.status(200).send({
 //       success: true,
@@ -145,19 +162,19 @@ export const getAllProduct = async (req, res) => {
 //   }
 // };
 
-// product photo
-// export const getProductPhoto = async (req, res) => {
+// product image
+// export const getProductimage = async (req, res) => {
 //   try {
-//     const product = await productModel.findById(req.params.pid).select("photo");
-//     if (product.photo.data) {
-//       res.set("content-type", product.photo.contentType);
-//       return res.status(200).send(product.photo.data);
+//     const product = await productModel.findById(req.params.pid).select("image");
+//     if (product.image.data) {
+//       res.set("content-type", product.image.contentType);
+//       return res.status(200).send(product.image.data);
 //     }
 //   } catch (error) {
 //     console.log(error);
 //     res.status(404).json({
 //       success: false,
-//       message: "Error while getting in product photo",
+//       message: "Error while getting in product image",
 //       error,
 //     });
 //   }
@@ -168,7 +185,7 @@ export const getAllProduct = async (req, res) => {
 //   try {
 //     const product = await productModel
 //       .findByIdAndDelete({ _id: req.params.id })
-//       .select("-photo");
+//       .select("-image");
 
 //     res.status(200).json({
 //       success: true,
@@ -230,7 +247,7 @@ export const productCount = async (req, res) => {
 //     const page = req.params.page ? req.params.page : 1;
 //     const product = await productModel
 //       .find({})
-//       .select("-photo")
+//       .select("-image")
 //       .skip((page - 1) * perPage)
 //       .limit(perPage)
 //       .sort({ createdAt: -1 });
@@ -258,7 +275,7 @@ export const productCount = async (req, res) => {
 //           { description: { $regex: keyword, $options: "i" } },
 //         ],
 //       })
-//       .select("-photo");
+//       .select("-image");
 //     res.json(product);
 //   } catch (error) {
 //     res.status(404).json({
@@ -278,7 +295,7 @@ export const productCount = async (req, res) => {
 //         category: cid,
 //         _id: { $ne: pid },
 //       })
-//       .select("-photo")
+//       .select("-image")
 //       .limit(4)
 //       .populate("category");
 //     res.status(200).json({

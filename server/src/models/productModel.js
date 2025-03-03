@@ -18,6 +18,13 @@ const productSchema = new Schema(
       type: Number,
       required: true,
     },
+    // image: Buffer, // Store image as Buffer (Binary Data)
+    // imageType: String, // Store MIME Type (e.g., image/png, image/jpeg)
+    image: {
+      // data: Buffer,
+      type: String,
+      contentType: String,
+    },
     // category: {
     //   type: mongoose.ObjectId,
     //   ref: "Category",
@@ -27,11 +34,6 @@ const productSchema = new Schema(
     //   type: Number,
     //   required: true,
     // },
-    photo: {
-      // data: Buffer,
-      type: String,
-      contentType: String,
-    },
     // shipping: {
     //   type: Boolean,
     // },
