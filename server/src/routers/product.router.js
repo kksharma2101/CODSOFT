@@ -18,7 +18,6 @@ import {
   // updateProduct,
 } from "../controllers/product.controller.js";
 import multer from "multer";
-import formidable from "express-formidable";
 
 const productRouter = express.Router();
 
@@ -29,8 +28,7 @@ const upload = multer({ storage });
 productRouter.post(
   "/create-product",
   userVerify,
-  formidable(),
-  // upload.single("photo"),
+  upload.single("image"),
   createProduct
 );
 

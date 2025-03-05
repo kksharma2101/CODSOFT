@@ -4,7 +4,8 @@ import productModel from "../models/productModel.js";
 export const createProduct = async (req, res) => {
   try {
     const { name, price, description } = req.body;
-    const image = req.file
+    const image = req.file.buffer;
+    // console.log(image);
     // ? req.file.buffer.toString("base64") : null;
 
     if (!(name, price, description)) {
@@ -17,11 +18,17 @@ export const createProduct = async (req, res) => {
         message: "image is required and should be less then 1mb",
       });
     }
+
     const product = new productModel({
       name,
       price,
       description,
-      image: image.buffer
+      image: image,
+      //  {
+      //   name: req.file.originalname,
+      //   data: req.file.buffer, // Store binary data
+      //   contentType: req.file.mimetype,
+      // },
       // req.file.buffer, // Store image as Buffer
       // imageType: req.file.mimetype, // Store image MIME type
     });

@@ -11,7 +11,7 @@ const ProductCard = () => {
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}product/get-product`
     );
-    //   console.log(res.data.product[0].photo)
+    // console.log(res)
     setProducts(res.data.product);
   }
 
@@ -20,7 +20,7 @@ const ProductCard = () => {
   }, []);
 
   return (
-    <>
+    <div className="w-full grid grid-cols-2 sm:grid-cols-3 place-items-center md:grid-cols-4 lg:grid-cols-5 mt-3 p-2 gap-5">
       {products?.map((product) => (
         <div
           key={product._id}
@@ -31,18 +31,18 @@ const ProductCard = () => {
             {/* <p className="text-wrap h-screen">{product.photo}</p> */}
             <Image
               // src={product?.photo}
-              src={`http://localhost:2026/api/image/${product._id}`}
+              src={`${process.env.NEXT_PUBLIC_API_URL}product/image/${product._id}`}
               alt={product.name}
-              width={100}
-              height={100}
-              // layout="fill"
-              // objectFit="cover"
+              // width={100}
+              // height={100}
+              layout="fill"
+              objectFit="cover"
               className="hover:scale-105 transition-transform duration-300"
             />
             {/* ) : null} */}
           </div>
 
-          <div className="p-4">
+          <div className="p-2">
             <h3 className="text-lg font-semibold">
               {product.name || "Unnamed Product"}
             </h3>
@@ -60,7 +60,7 @@ const ProductCard = () => {
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

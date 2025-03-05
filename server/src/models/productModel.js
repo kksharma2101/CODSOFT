@@ -21,8 +21,10 @@ const productSchema = new Schema(
     // image: Buffer, // Store image as Buffer (Binary Data)
     // imageType: String, // Store MIME Type (e.g., image/png, image/jpeg)
     image: {
-      // data: Buffer,
-      type: String,
+      // name: String, // Name of the file
+      // data: Buffer, // Store image as binary data
+      // contentType: String, // MIME type of the file
+      type: Buffer,
       contentType: String,
     },
     // category: {
