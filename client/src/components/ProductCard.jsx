@@ -20,26 +20,20 @@ const ProductCard = () => {
   }, []);
 
   return (
-    <div className="w-full grid grid-cols-2 sm:grid-cols-3 place-items-center md:grid-cols-4 lg:grid-cols-5 mt-3 p-2 gap-5">
+    <div className="w-full flex flex-wrap mt-3 p-2 gap-5 justify-center items-center">
       {products?.map((product) => (
         <div
           key={product._id}
           className="max-w-sm bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200"
         >
           <div className="relative w-full h-56">
-            {/* {product.photo ? ( */}
-            {/* <p className="text-wrap h-screen">{product.photo}</p> */}
             <Image
-              // src={product?.photo}
               src={`${process.env.NEXT_PUBLIC_API_URL}product/image/${product._id}`}
               alt={product.name}
-              // width={100}
-              // height={100}
-              layout="fill"
+              fill
               objectFit="cover"
               className="hover:scale-105 transition-transform duration-300"
             />
-            {/* ) : null} */}
           </div>
 
           <div className="p-2">
@@ -53,7 +47,7 @@ const ProductCard = () => {
               <span className="text-xl font-bold text-blue-600">
                 ${product.price || "N/A"}
               </span>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+              <button className="bg-blue-600 text-white px-3 md:px-4 py-2 rounded-lg hover:bg-blue-700 transition">
                 Add to Cart
               </button>
             </div>
