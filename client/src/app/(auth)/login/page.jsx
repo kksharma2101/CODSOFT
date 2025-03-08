@@ -1,12 +1,15 @@
 "use client";
 import AuthForm from "@/components/AuthForm";
+import { login } from "@/redux/slices/authSlice";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { useDispatch } from "react-redux";
 
 const page = () => {
   const navigate = useRouter();
+  const dispatch = useDispatch();
 
   const handleLogin = async (formData) => {
     try {
@@ -14,8 +17,9 @@ const page = () => {
         `${process.env.NEXT_PUBLIC_API_URL}login`,
         formData
       );
-      localStorage.setItem("token", user?.data?.userToken);
       if (user?.data?.success) {
+        dispatch(login(user?.data));
+        localStorage.setItem("auth", JSON.stringify(user.data))
         navigate.push("/");
       }
     } catch (error) {
