@@ -19,7 +19,7 @@ const page = () => {
       );
       if (user?.data?.success) {
         dispatch(login(user?.data));
-        localStorage.setItem("auth", JSON.stringify(user.data))
+        // localStorage.setItem("auth", JSON.stringify(user.data))
         navigate.push("/");
       }
     } catch (error) {

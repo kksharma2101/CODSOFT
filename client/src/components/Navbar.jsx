@@ -4,12 +4,18 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { RiMenuLine } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "@/redux/slices/authSlice";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [dropDown, setDropDown] = useState(false);
   const { isLoggedIn, user } = useSelector((state) => state.auth);
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -21,7 +27,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gray-800 p-4">
-      <div className="mx-auto flex justify-between items-center">
+      <div className="mx-4 flex justify-between items-center">
         <Link href="/" className="text-white font-bold text-xl">
           Ecommerce
         </Link>
@@ -36,30 +42,34 @@ const Navbar = () => {
           <Link href="/cart" className="text-gray-300 hover:text-white">
             Cart
           </Link>
-          <Link href="/login" className="text-gray-300 hover:text-white">
-            {!isLoggedIn ? "Login" : user?.user}
-          </Link>
-          <div
-            className="flex justify-center flex-col p-2"
-            onClick={toggleDropdown}
-          >
-            <select>
-              <option>{user?.user || "User"}</option>
-              <option>
-                <Link
-                  href="/dashboard"
-                  className="text-gray-300 hover:text-white"
-                >
-                  Dashboard
-                </Link>
-              </option>
-              <option value="">
-                <Link href="/" className="text-gray-300 hover:text-white">
-                  Logout
-                </Link>
-              </option>
-            </select>
-          </div>
+          {!isLoggedIn ? (
+            <Link href="/login" className="text-gray-300 hover:text-white">
+              Login
+            </Link>
+          ) : (
+            <div onClick={toggleDropdown}>
+              <p className="text-gray-300 hover:text-white cursor-pointer">
+                {user?.user || "User"}
+              </p>
+              {dropDown && (
+                <div className="absolute right-1 z-50 flex justify-center flex-col bg-white border-b p-3 rounded-sm">
+                  <Link
+                    href="/dashboard"
+                    className="text-gray-500 hover:text-black"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href="/"
+                    className="text-gray-500 hover:text-black"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="sm:hidden">
@@ -96,12 +106,40 @@ const Navbar = () => {
           >
             Cart
           </Link>
-          <Link
-            href="/account"
-            className="block py-2 px-4 text-gray-300 hover:bg-gray-700"
-          >
-            Account
-          </Link>
+          {!isLoggedIn ? (
+            <Link
+              href="/login"
+              className="block py-2 px-4 text-gray-300 hover:bg-gray-700"
+            >
+              Login
+            </Link>
+          ) : (
+            <div
+              className="block py-2 px-4 text-gray-300 hover:bg-gray-700"
+              onClick={toggleDropdown}
+            >
+              <p className="text-gray-300 hover:text-white cursor-pointer">
+                {user?.user || "User"}
+              </p>
+              {dropDown && (
+                <div className="absolute left-1 z-50 flex justify-center flex-col bg-white border-b p-3 rounded-sm">
+                  <Link
+                    href="/dashboard"
+                    className="text-gray-500 hover:text-black"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href="/"
+                    className="text-gray-500 hover:text-black"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </nav>
