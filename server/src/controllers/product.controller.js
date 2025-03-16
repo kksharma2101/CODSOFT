@@ -5,8 +5,6 @@ export const createProduct = async (req, res) => {
   try {
     const { name, price, description } = req.body;
     const image = req.file.buffer;
-    // console.log(image);
-    // ? req.file.buffer.toString("base64") : null;
 
     if (!(name, price, description)) {
       return res.status(400).json({
@@ -24,13 +22,6 @@ export const createProduct = async (req, res) => {
       price,
       description,
       image: image,
-      //  {
-      //   name: req.file.originalname,
-      //   data: req.file.buffer, // Store binary data
-      //   contentType: req.file.mimetype,
-      // },
-      // req.file.buffer, // Store image as Buffer
-      // imageType: req.file.mimetype, // Store image MIME type
     });
 
     await product.save();
