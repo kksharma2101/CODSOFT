@@ -1,13 +1,17 @@
 "use client";
 
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 const CreateProduct = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState();
   const [price, setPrice] = useState(Number);
+  const router = useRouter();
+  const token = useSelector((state) => state.auth.user.userToken);
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -28,15 +32,14 @@ const CreateProduct = () => {
         `${process.env.NEXT_PUBLIC_API_URL}product/create-product`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
+
       if (res.data.success) {
-        console.log(res);
-        setDescription("");
-        setName("");
-        setPrice(0);
-        setImage(null);
+        router.push("/");
       }
     } catch (error) {
       console.error("Error uploading:", error);
